@@ -1,8 +1,12 @@
-import '../styles/globals.css';
+import '../styles/utils.tsx';
 import type { AppProps } from 'next/app';
 import { createGlobalStyle, ThemeProvider } from "styled-components";
+import { config } from '@fortawesome/fontawesome-svg-core';
+import '@fortawesome/fontawesome-svg-core/styles.css';
 
-
+import Layout from '../components/Layout';
+import ShoppingCartProvider from '../contexts/ShoppingCartContext';
+config.autoAddCss = false
 
 
 const GlobalStyle = createGlobalStyle`
@@ -25,6 +29,7 @@ const GlobalStyle = createGlobalStyle`
 const theme = {
   colors: {
     primary: "#f73f01",
+    secondary: "#777",
   },
 };
 
@@ -33,9 +38,11 @@ function MyApp({ Component, pageProps }: AppProps) {
     <>
         <GlobalStyle />
         <ThemeProvider theme={theme}>
-          
-            <Component {...pageProps} />
-          
+          <ShoppingCartProvider>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>     
+          </ShoppingCartProvider>
         </ThemeProvider>
     </>
   );
