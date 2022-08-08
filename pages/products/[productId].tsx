@@ -1,15 +1,15 @@
-import type { NextPage, GetServerSideProps } from 'next';
-import Image from 'next/image';
-import { useContext } from 'react';
-import styled from 'styled-components';
-import Banner from '../../components/Banner';
-import { ShoppingCartContext } from '../../contexts/ShoppingCartContext';
-import BannerImage from '../../public/images/BANNER 02.png'
+import type { NextPage, GetServerSideProps } from "next";
+import Image from "next/image";
+import { useContext } from "react";
+import styled from "styled-components";
+import { ToastContainer, toast } from "react-toastify";
 
-import { Container } from '../../styles/utils';
-import { IProduct } from '../../types';
-
-
+import Banner from "../../components/Banner";
+import { ShoppingCartContext } from "../../contexts/ShoppingCartContext";
+import BannerImage from "../../public/images/BANNER 02.png";
+import { Container } from "../../styles/utils";
+import { IProduct } from "../../types";
+import "react-toastify/dist/ReactToastify.css";
 
 interface ProductsProps {
   product: IProduct;
@@ -17,62 +17,65 @@ interface ProductsProps {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const productId = ctx.params?.productId;
-  const api = 'https://imagineschool13.herokuapp.com';
+  const api = "https://imagineschool13.herokuapp.com";
   const result = await fetch(`${api}/products/${productId}`);
   const product: IProduct = await result.json();
-  product.image = `${api}/uploads/${product.fileName}`
-  product.formattedPrice = (new Intl.NumberFormat('pt-Br', {style:'currency', currency:'BRL'})).format(product.price);
-  product.splitPrice = (new Intl.NumberFormat('pt-Br', {style:'currency', currency:'BRL'})).format(product.price/10);
-  return{
+  product.image = `${api}/uploads/${product.fileName}`;
+  product.formattedPrice = new Intl.NumberFormat("pt-Br", {
+    style: "currency",
+    currency: "BRL",
+  }).format(product.price);
+  product.splitPrice = new Intl.NumberFormat("pt-Br", {
+    style: "currency",
+    currency: "BRL",
+  }).format(product.price / 10);
+  return {
     props: {
-     product
-    }
-  }
-}
-
+      product,
+    },
+  };
+};
 
 const ProductId: NextPage<ProductsProps> = ({ product }) => {
-
-  const { addProduct } =useContext(ShoppingCartContext);
+  const { addProduct } = useContext(ShoppingCartContext);
 
   const addProductInShoppingCart = (product: IProduct) => {
-    addProduct(product);
-  }
+    toast.success("Produto adicionado no carrinho", {
+      position: "bottom-right",
+      autoClose: 3000,
+    }),
+      addProduct(product);
+  };
 
   return (
-    <ProductContainer>  
-      <Banner image={BannerImage} width={1140} heigh={145}/>  
-      <ProductDetail>
-        <ImageContainer>
-          <Image src={product.image} width={200} height={200}/>
-        </ImageContainer>
+    <>
+      <ProductContainer>
+        <Banner image={BannerImage} width={1140} heigh={145} />
+        <ProductDetail>
+          <ImageContainer>
+            <Image src={product.image} width={200} height={200} />
+          </ImageContainer>
           <div>
-            <ProductName>
-              {product.name}   
-            </ProductName>
-            <ProductPrice>
-              {product.formattedPrice}
-            </ProductPrice>
+            <ProductName>{product.name}</ProductName>
+            <ProductPrice>{product.formattedPrice}</ProductPrice>
             <ProductSplitPrice>
               10x de {product.splitPrice} sem juros
             </ProductSplitPrice>
             <Button onClick={() => addProductInShoppingCart(product)}>
               Adicionar ao carrinho
             </Button>
-            <ProductDescription>
-              {product.description}
-            </ProductDescription>
-          </div>        
-      </ProductDetail>  
-      <SummaryTitle>
-        <span>Inf</span>ormações do produto
-      </SummaryTitle> 
-      <Summary>
-        {product.summary}
-      </Summary>
-    </ProductContainer>
-  )
-}
+            <ProductDescription>{product.description}</ProductDescription>
+          </div>
+        </ProductDetail>
+        <SummaryTitle>
+          <span>Inf</span>ormações do produto
+        </SummaryTitle>
+        <Summary>{product.summary}</Summary>
+      </ProductContainer>
+      <ToastContainer />
+    </>
+  );
+};
 
 const ProductContainer = styled.main`
   ${Container};
@@ -100,7 +103,7 @@ const ProductName = styled.p`
 `;
 
 const ProductPrice = styled.p`
-  color: ${({theme}) => theme.colors.primary };
+  color: ${({ theme }) => theme.colors.primary};
   font-size: 2.125rem;
   font-weight: 700;
   margin: 0;
@@ -110,18 +113,18 @@ const ProductPrice = styled.p`
 const ProductSplitPrice = styled.p`
   font-size: 0.875rem;
   color: #999;
-`
+`;
 const Button = styled.button`
   display: block;
   border: unset;
   border-radius: 4px;
   width: 290px;
   height: 60px;
-  background-color: ${({theme}) => theme.colors.primary};
+  background-color: ${({ theme }) => theme.colors.primary};
   color: #fff;
   font-weight: 700;
   font-size: 1rem;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   cursor: pointer;
   margin: 2.25rem 0;
 `;
@@ -136,12 +139,12 @@ const SummaryTitle = styled.p`
   margin: 0;
   margin-bottom: 2.8rem;
   span {
-    text-decoration: underline ${({theme}) => theme.colors.primary};
+    text-decoration: underline ${({ theme }) => theme.colors.primary};
   }
 `;
 
 const Summary = styled.div`
-  min-height: 800px
+  min-height: 800px;
 `;
 
 export default ProductId;
