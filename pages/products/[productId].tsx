@@ -3,13 +3,14 @@ import Image from "next/image";
 import { useContext } from "react";
 import styled from "styled-components";
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import Banner from "../../components/Banner";
 import { ShoppingCartContext } from "../../contexts/ShoppingCartContext";
 import BannerImage from "../../public/images/BANNER 02.png";
 import { Container } from "../../styles/utils";
 import { IProduct } from "../../types";
-import "react-toastify/dist/ReactToastify.css";
+
 
 interface ProductsProps {
   product: IProduct;
