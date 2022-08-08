@@ -12,7 +12,7 @@ import { ShoppingCartContext } from "../contexts/ShoppingCartContext";
 import { Container } from "../styles/utils";
 import { IProduct } from "../types";
 
-const shoppingCart: NextPage = () => {
+const ShoppingCart = () => {
   const {
     getProducts,
     deleteProduct,
@@ -341,4 +341,4 @@ const Button = styled.button`
   height: 60px;
 `;
 
-export default shoppingCart;
+export default ShoppingCart;
